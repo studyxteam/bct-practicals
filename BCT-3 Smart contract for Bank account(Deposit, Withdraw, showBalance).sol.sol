@@ -1,23 +1,32 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
+//SPDX-License-Identifier: UNLICENSED 
+pragma solidity^0.8.0;
+contract Bank{ 
+    address public accHolder;
+    uint256 balance = 0;
 
-contract Bank{
-    
-    mapping(address => uint) balanceOf;
+    constructor(){
 
-    function deposit() public payable {
-        require(msg.value > 0, "Deposit should be greater than zero.");
-        balanceOf[msg.sender] += msg.value;
+        accHolder = msg.sender;
     }
 
-    function withdraw()  public {
-        require(balanceOf[msg.sender] > 0, "Your balance should be greater than zero.");
-        payable(msg.sender).transfer(balanceOf[msg.sender]);
-        balanceOf[msg.sender] = 0;
+    function withdraw() payable public {
+        require(msg.sender ==accHolder,"You are not the account owner");
+        require(balance>0,"You dont have enough balance");
+        payable(msg.sender).transfer(balance);
+
+    }
+    function deposit()public payable{
+        require(msg.sender==accHolder,"You are not the account owner");
+        require(msg.value>0,"Deposit amount should be greater than 0");
+        balance+=msg.value;
     }
 
-    function showBalance() public view returns(uint) {
-        return balanceOf[msg.sender];
+    function showBalance () public view returns (uint){
+        require(msg.sender==accHolder,"You are not the account owner");
+        return balance;
+   
     }
-
+    //function showBalance () public view returns (uint){
+      // return  balance ;
 }
+
